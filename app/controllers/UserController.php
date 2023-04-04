@@ -11,6 +11,7 @@ class UserController extends Controller{
     private $userSrv;
     private $authSrv;
     public function __construct(){
+        die();
         $this->userSrv = new UserService();
         $this->authSrv = new AuthService();
         parent::__construct();

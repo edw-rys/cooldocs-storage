@@ -1,16 +1,18 @@
 <?php
 include_once SERVICES."BooksService.php";
+include_once CLASSES."Controller.php";
 
+use Classes\Controller;
 use Service\BooksService;
 
-class BooksController
-{
+class BooksController extends Controller{
 
     private BooksService $booksSrv;
 
 
     public function __construct() {
         $this->booksSrv = new BooksService;
+        parent::__construct();
     }
 
 
@@ -18,8 +20,8 @@ class BooksController
     {
         // Validate id por api
 
-        $id = 42;
-        $file = $this->booksSrv->getFileRoute($id);
+        // $id = 42;
+        $file = $this->booksSrv->getFileRoute($id, $part_id, $this->_request);
         $filesize = filesize($file);
 
         $offset = 0;
