@@ -7,10 +7,10 @@ class BooksService {
     public function getFileRoute($id, $part_id = null)
     {
         $subdomain = 'admindev';
-        if (!isset($_REQUEST['subdomain']) || $_REQUEST['subdomain'] == null) {
+        if (!(!isset($_REQUEST['subdomain']) || $_REQUEST['subdomain'] == null)) {
             $subdomain = $_REQUEST['subdomain'];
         }
-        $url = 'https://'. $subdomain.'.holguinpuentedigital.com/api/book/get-api-data/'+ $id;
+        $url = 'https://'. $subdomain.'.holguinpuentedigital.com/api/book/get-api-data/'. $id;
         if($part_id != null){
             $url .='/'.$part_id;
         }
