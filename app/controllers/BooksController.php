@@ -21,7 +21,7 @@ class BooksController extends Controller{
         // Validate id por api
 
         // $id = 42;
-        $file = $this->booksSrv->getFileRoute($id, $part_id, $this->_request);
+        $file = $this->booksSrv->getFileRoute($id, $part_id, $this->_request, ['checkSession'=>!isset($_SERVER['HTTP_RANGE'])]);
         $filesize = filesize($file);
 
         $offset = 0;

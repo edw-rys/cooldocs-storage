@@ -11,5 +11,11 @@ if($method == "OPTIONS") {
 }
 
 require_once 'app/classes/Tnx.php';
+$FILE = 'autoload.php';
+if(!is_file('vendor/'.$FILE)){
+    die(sprintf("Archivo [vendor/".$FILE."] no se encuentra, extrictamente requerido para el funcionamiento."));
+}
+require_once 'vendor/'.$FILE;
+\Dotenv\Dotenv::createImmutable(__DIR__)->load();
 // Excecute framework
 Tnx::fly();

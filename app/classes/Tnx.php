@@ -28,7 +28,7 @@ class Tnx{
     */
     private function init_session(){
         if(!isset($_SESSION)){
-            session_start();
+            //session_start();
         }
         return;
     }

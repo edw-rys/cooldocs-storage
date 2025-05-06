@@ -1,11 +1,38 @@
 <?php
 namespace Service;
 
+include_once SERVICES."RedisService.php";
 
 class BooksService {
 
-    public function getFileRoute($id, $part_id = null, $_params = [])
+    public function findRedis($id, $part_id = '') {
+        RedisService::instance();
+        $element = RedisService::get('red_book__'. $id.'_'.($part_id??''));
+        if($element == null){
+            return null;
+        }
+        return json_decode(json_decode($element));
+    }
+
+    public function setRedis($id, $data, $part_id = '') {
+        RedisService::instance();
+        return RedisService::set('red_book__'. $id. '_'.($part_id??''), json_encode($data));
+    }
+
+
+    public function getFileRoute($id, $part_id = null, $request =[],$_params = [])
     {
+        if (isset($_params['checkSession']) && !$_params['checkSession']) {
+            $book = $this->findRedis($id, ($part_id??''));
+            if ($book != null) {
+                $file = $book->path;
+                if(!file_exists($file)){
+                    responseJson(['message'=> 'Libro no encontrado'], 404);
+                    exit;
+                }
+                return $file;
+            }
+        }
         $subdomain = 'admindev';
         if (isset($_REQUEST['subdomain']) && $_REQUEST['subdomain'] != null){
             $subdomain = $_REQUEST['subdomain'];
@@ -67,6 +94,14 @@ class BooksService {
                 // 'data'  => $data
             ], 400);die();
         }
+        if (!isset($jsonData->path)) {
+            responseJson( [
+                'status'    => 'error',
+                'code'      => '403',
+                'message'   => $jsonData->message
+            ], 400);die();
+        }
+        $this->setRedis($id, json_encode($jsonData), $part_id);
         $file = $jsonData->path;
 
         // $file = 'C:/xampp/htdocs/CoolDocs/storage/app/books/4/book/6eoQXeIx3t39mhNSigD8VF7MzCXXAefzZ1bamC3E.pdf';
