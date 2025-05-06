@@ -49,7 +49,7 @@ class Controller
         }
         break;
       default:
-        return responseJson([] , 406);
+        return responseJson([] , 200);
     }
   }
   public function get_request_method()
