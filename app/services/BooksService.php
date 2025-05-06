@@ -7,7 +7,7 @@ class BooksService {
 
     public function findRedis($id, $part_id = '') {
         RedisService::instance();
-        $element = RedisService::get('red_book__'. $id.'_'.($part_id??''));
+        $element = RedisService::get('pd_red_book__'. $id.'_'.($part_id??''));
         if($element == null){
             return null;
         }
@@ -16,7 +16,7 @@ class BooksService {
 
     public function setRedis($id, $data, $part_id = '') {
         RedisService::instance();
-        return RedisService::set('red_book__'. $id. '_'.($part_id??''), json_encode($data));
+        return RedisService::set('pd_red_book__'. $id. '_'.($part_id??''), json_encode($data));
     }
 
 

@@ -42,7 +42,7 @@ class RedisService
     }
 
     public static function set($key, $value) {
-        self::$redis->set($key, $value);
+        self::$redis->set($key, $value, 345600); // 4 días
     }
 
     public static function get($key) {
