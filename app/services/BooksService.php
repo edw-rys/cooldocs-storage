@@ -4,10 +4,10 @@ namespace Service;
 include_once SERVICES."RedisService.php";
 
 class BooksService {
-
+    private $keyBook = 'pd__red_book__';
     public function findRedis($id, $part_id = '') {
         RedisService::instance();
-        $element = RedisService::get('pd_red_book__'. $id.'_'.($part_id??''));
+        $element = RedisService::get($this->keyBook. $id.'_'.($part_id??''));
         if($element == null){
             return null;
         }
@@ -16,7 +16,7 @@ class BooksService {
 
     public function setRedis($id, $data, $part_id = '') {
         RedisService::instance();
-        return RedisService::set('pd_red_book__'. $id. '_'.($part_id??''), json_encode($data));
+        return RedisService::set($this->keyBook. $id. '_'.($part_id??''), json_encode($data));
     }
 
 
@@ -25,12 +25,7 @@ class BooksService {
         if (isset($_params['checkSession']) && !$_params['checkSession']) {
             $book = $this->findRedis($id, ($part_id??''));
             if ($book != null) {
-                $file = $book->path;
-                if(!file_exists($file)){
-                    responseJson(['message'=> 'Libro no encontrado'], 404);
-                    exit;
-                }
-                return $file;
+                return $book;
             }
         }
         $subdomain = 'admindev';
@@ -73,8 +68,6 @@ class BooksService {
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $header = substr($data, 0, $headerSize);
         $body = substr($data, $headerSize);
-        // echo htmlspecialchars($data);die();
-        // echo '<pre>';var_dump($body);die();
         curl_close($curl);
         if(!$body){
             responseJson(  [
@@ -102,15 +95,13 @@ class BooksService {
             ], 400);die();
         }
         $this->setRedis($id, json_encode($jsonData), $part_id);
-        $file = $jsonData->path;
 
-        // $file = 'C:/xampp/htdocs/CoolDocs/storage/app/books/4/book/6eoQXeIx3t39mhNSigD8VF7MzCXXAefzZ1bamC3E.pdf';
-        // $file = '/webapps/apps/puente-digital/backend/storage/app/books/73/book/1657040558.pdf';
+        return $jsonData;
+        /*$file = $jsonData->path;
         if(!file_exists($file)){
             responseJson(['message'=> 'Libro no encontrado'], 404);
             exit;
         }
-        return $file;
-
+        return $file;*/
     }
 }
