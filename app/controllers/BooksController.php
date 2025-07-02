@@ -154,4 +154,7 @@ class BooksController extends Controller{
         header('Accept-Ranges: bytes');
         print($data);
     }
+    public function checkFlipBook(){
+        echo '9661187065405406358209263650625364492668781751488614';
+    }
 }
