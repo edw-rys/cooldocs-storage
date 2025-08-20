@@ -33,12 +33,17 @@ class BooksService {
             $subdomain = $_REQUEST['subdomain'];
         }
         $headers = apache_request_headers();
-        if(!isset($headers['Authorization']) || $headers['Authorization'] == null){
+        if(
+            (!isset($headers['Authorization']) || $headers['Authorization'] == null) &&
+            (!isset($_GET['token_refrs']) || $_GET['token_refrs'] == null)
+        ){
             responseJson(['message' =>'no autenticado.'], 401);
             die();
         }
-        
-        $authorization = $headers['Authorization'];
+
+        $authorization = isset($headers['Authorization']) && $headers['Authorization'] != null
+            ? $headers['Authorization']
+            : $_GET['token_refrs'];
 
         // $url = 'https://'. $subdomain.'.holguinpuentedigital.com/api/book/get-api-data/'. $id ;
         $url = $_ENV['API_BACK_EXTERNAL_PD']. '/api/book/get-api-data/'. $id ;
@@ -52,7 +57,7 @@ class BooksService {
 
         // echo $url;die;
         $curl = curl_init();
-        
+
         $headers = [
             // 'Content-type: application/json',
             'Accept: application/json',
